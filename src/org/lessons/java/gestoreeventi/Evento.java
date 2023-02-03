@@ -93,32 +93,40 @@ public class Evento {
 	}
 
 	public void prenota() {
-		LocalDate now = LocalDate.now();
-		if (data.isBefore(now)) {
-			throw new IllegalStateException("Non puoi prenotare un evento già passato!");
+		try {
+			LocalDate now = LocalDate.now();
+			if (data.isBefore(now)) {
+				throw new IllegalStateException("Non puoi prenotare un evento già passato!");
+			}
+			if (postiPrenotati >= postiTotali) {
+				throw new IllegalStateException(
+						"Non puoi prenotare più posti di quelli disponibili! Riprova, i posti disponibili sono "
+								+ this.postiTotali + ": ");
+			}
+			postiPrenotati++;
+		} catch (IllegalStateException e) {
+			System.out.println(e.getMessage());
 		}
-		if (postiPrenotati >= postiTotali) {
-			throw new IllegalStateException("I posti a disposizione sono esauriti!");
-		}
-		postiPrenotati++;
 	}
 
-	public void disdici() {
+	public void disdici(int disdette) {
 		LocalDate now = LocalDate.now();
 		if (data.isBefore(now)) {
 			throw new IllegalStateException("Non puoi disdire un evento già passato!");
 		}
-		if (postiPrenotati == 0) {
-			throw new IllegalStateException("Non puoi effettuare più disdette dei posti prenotati!");
+		if (postiPrenotati < disdette) {
+			throw new IllegalStateException(
+					"Non puoi effettuare più disdette dei posti prenotati! I posti prenotati sono "
+							+ getPostiPrenotati() + ": ");
 		}
-		postiPrenotati--;
+		postiPrenotati -= disdette;
 	}
 
 	@Override
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy").withLocale(Locale.ITALY);
 		String formattedDate = data.format(formatter);
-		return formattedDate + " - " + titolo;
+		return "Data dell'evento: " + formattedDate + " - " + "Nome dell'evento: " + titolo;
 	}
 
 }

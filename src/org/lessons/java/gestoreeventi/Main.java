@@ -150,22 +150,22 @@ public class Main {
 		}
 
 		// richiesta prenotazioni
-		boolean prenotazioniValide = false;
-		int prenotazioni = 0;
-		while (!prenotazioniValide) {
-			System.out.print("Quante prenotazioni vuoi effettuare? ");
-			try {
-				prenotazioni = s.nextInt();
-				s.nextLine();
-				prenotazioniValide = true;
-			} catch (InputMismatchException e) {
-				System.out.println(
-						"Input non valido, inserisci un numero positivo e non superiore ai posti disponibili. Riprova: ");
-				s.nextLine();
-			}
+		System.out.print("Quante prenotazioni vuoi effettuare? I posti totali sono " + postiTotali + ": ");
+		int prenotazioni = s.nextInt();
+		s.nextLine();
+
+		while (prenotazioni > postiTotali) {
+			System.out.println("Il numero di prenotazioni richieste supera i posti disponibili (" + postiTotali
+					+ "). Inserisci un numero valido: ");
+			prenotazioni = s.nextInt();
+			s.nextLine();
 		}
 		for (int i = 0; i < prenotazioni; i++) {
-			evento.prenota();
+			try {
+				evento.prenota();
+			} catch (IllegalStateException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 
 		System.out.println("Posti prenotati: " + evento.getPostiPrenotati());
@@ -174,21 +174,33 @@ public class Main {
 		// gestione eventuali disdette
 		System.out.println("Vuoi effettuare delle disdette? (s/n)");
 		String risposta = s.nextLine();
+		while (!risposta.equalsIgnoreCase("s") && !risposta.equalsIgnoreCase("n")) {
+			System.out.println("Input non valido, devi digitare 's' per dire SI e 'n' per dire NO. Riprova: ");
+			risposta = s.nextLine();
+		}
+		int disdette = 0;
 		if (risposta.equalsIgnoreCase("s")) {
-			System.out.println("Quante disdette vuoi effettuare?");
-			int disdette = 0;
-			boolean disdetteValide = false;
-			while (!disdetteValide) {
+			System.out.println(
+					"Quante disdette vuoi effettuare? I posti prenotati sono " + evento.getPostiPrenotati() + ": ");
+			while (true) {
 				try {
 					disdette = s.nextInt();
-					disdetteValide = true;
+					evento.disdici(disdette);
+					break;
 				} catch (InputMismatchException e) {
 					System.out.println("Input non valido. Riprova: ");
 					s.nextLine();
+				} catch (IllegalStateException e) {
+					System.out.println(e.getMessage());
 				}
 			}
-			for (int i = 0; i < disdette; i++) {
-				evento.disdici();
+		}
+		for (int i = 0; i < disdette; i++) {
+			try {
+				evento.disdici(disdette);
+			} catch (IllegalStateException e) {
+				System.out.println(e.getMessage());
+				break;
 			}
 		}
 
