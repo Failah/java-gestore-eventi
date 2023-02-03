@@ -33,12 +33,12 @@ public class Concerto extends Evento {
 	}
 
 	public String getDataOra() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").withLocale(Locale.ITALY);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy").withLocale(Locale.ITALY);
 		return getData().format(formatter) + " " + ora.toString();
 	}
 
 	public void setOra(LocalTime ora) {
-		this.ora = LocalTime.now();
+		this.ora = ora;
 	}
 
 	public BigDecimal getPrezzo() {
@@ -55,7 +55,8 @@ public class Concerto extends Evento {
 
 	@Override
 	public String toString() {
-		return getDataOra() + " " + getTitolo() + " " + getPrezzoFormattato();
+		return "Data e ora del concerto: " + getDataOra() + "; Nome del concerto: " + getTitolo()
+				+ "; Prezzo del biglietto: " + getPrezzoFormattato();
 	}
 
 }
