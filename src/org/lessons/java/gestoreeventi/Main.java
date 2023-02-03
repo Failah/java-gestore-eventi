@@ -108,7 +108,7 @@ public class Main {
 				data = LocalDate.parse(dataInserita, formatter);
 				dataValida = true;
 			} catch (DateTimeParseException e) {
-				System.out.println("Data non valida. Riprova, usa questo format -> (gg/mm/aaaa): ");
+				System.out.println("Data non valida. Riprova, usa questo formato -> (gg/mm/aaaa): ");
 			}
 		}
 
@@ -117,17 +117,53 @@ public class Main {
 		if (sceltaEvento.equalsIgnoreCase("Evento")) {
 			evento = new Evento(titolo, data, postiTotali);
 		} else {
+			// richiesta orario del concerto
 			System.out.println("Inserisci l'orario del concerto: ");
-			LocalTime ora = LocalTime.parse(s.nextLine());
+			boolean oraValida = false;
+			LocalTime ora = null;
+			while (!oraValida) {
+				try {
+					ora = LocalTime.parse(s.nextLine());
+					oraValida = true;
+				} catch (DateTimeParseException e) {
+					System.out.println("Orario non valido. Riprova, usa questo formato -> (hh:mm): ");
+				}
+			}
+
+			// richiesta prezzo del biglietto del concerto
 			System.out.println("Inserisci prezzo del biglietto del concerto: ");
-			BigDecimal prezzo = s.nextBigDecimal();
+			boolean prezzoValido = false;
+			BigDecimal prezzo = null;
+			while (!prezzoValido) {
+				try {
+					prezzo = s.nextBigDecimal();
+					if (prezzo.compareTo(BigDecimal.ZERO) <= 0) {
+						throw new InputMismatchException();
+					}
+					prezzoValido = true;
+				} catch (InputMismatchException e) {
+					System.out.println("Prezzo non valido. Riprova: ");
+					s.nextLine();
+				}
+			}
 			evento = new Concerto(titolo, data, postiTotali, ora, prezzo);
 		}
 
-		System.out.print("Quante prenotazioni vuoi effettuare? ");
-		int prenotazioni = s.nextInt();
-		s.nextLine();
-
+		// richiesta prenotazioni
+		boolean prenotazioniValide = false;
+		int prenotazioni = 0;
+		while (!prenotazioniValide) {
+			System.out.print("Quante prenotazioni vuoi effettuare? ");
+			try {
+				prenotazioni = s.nextInt();
+				s.nextLine();
+				prenotazioniValide = true;
+			} catch (InputMismatchException e) {
+				System.out.println(
+						"Input non valido, inserisci un numero positivo e non superiore ai posti disponibili. Riprova: ");
+				s.nextLine();
+			}
+		}
 		for (int i = 0; i < prenotazioni; i++) {
 			evento.prenota();
 		}
@@ -140,8 +176,17 @@ public class Main {
 		String risposta = s.nextLine();
 		if (risposta.equalsIgnoreCase("s")) {
 			System.out.println("Quante disdette vuoi effettuare?");
-			int disdette = s.nextInt();
-
+			int disdette = 0;
+			boolean disdetteValide = false;
+			while (!disdetteValide) {
+				try {
+					disdette = s.nextInt();
+					disdetteValide = true;
+				} catch (InputMismatchException e) {
+					System.out.println("Input non valido. Riprova: ");
+					s.nextLine();
+				}
+			}
 			for (int i = 0; i < disdette; i++) {
 				evento.disdici();
 			}
