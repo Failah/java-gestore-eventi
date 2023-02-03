@@ -24,9 +24,7 @@ prenotazioni deve sollevare un’eccezione.
 3. l’override del metodo toString() in modo che venga restituita una stringa
 contenente: data formattata - titolo
 Aggiungete eventuali metodi (public e private) che vi aiutino a svolgere le funzioni richieste.
- */
 
-/*
  * MILESTONE 2
 1. Creare una classe Main di test, in cui si chiede all’utente di inserire un nuovo evento
 con tutti i parametri.
@@ -38,6 +36,15 @@ eventuali eccezioni.
 5. Provare ad effettuare le disdette, implementando opportuni controlli e gestendo
 eventuali eccezioni
 6. Stampare a video il numero di posti prenotati e quelli disponibili
+
+MILESTONE 3
+Creare una classe Concerto che estende Evento, che ha anche gli attributi :
+● ora: LocalTime
+● prezzo: BigDecimal
+Aggiungere questi attributi nel costruttore e implementarne getter e setter
+Aggiungere i metodi per restituire data e ora formattata e prezzo formattato (##,##€)
+Fare l’ override del metodo toString() in modo che venga restituita una stringa del tipo:
+data e ora formattata - titolo - prezzo formattato
  */
 
 package org.lessons.java.gestoreeventi;
