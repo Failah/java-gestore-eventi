@@ -44,81 +44,53 @@ package org.lessons.java.gestoreeventi;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.util.Scanner;
 
-public class Evento {
-	private String titolo;
-	private LocalDate data;
-	private int postiTotali;
-	private int postiPrenotati = 0;
+public class Main {
 
-	public Evento(String titolo, LocalDate data, int postiTotali) {
-		super();
-		this.titolo = titolo;
-		setData(data);
+	public static void main(String[] args) {
+		Scanner s = new Scanner(System.in);
 
-		// controllo inserimento posti totali
-		if (postiTotali <= 0) {
-			throw new IllegalArgumentException("I posti totali devono essere positivi!");
+		System.out.print("Inserisci il nome dell'evento: ");
+		String titolo = s.nextLine();
+
+		System.out.print("Inserisci il numero totale di posti: ");
+		int postiTotali = s.nextInt();
+		s.nextLine();
+
+		System.out.print("Inserisci la data dell'evento (gg/mm/aaaa): ");
+		String dataInserita = s.nextLine();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate data = LocalDate.parse(dataInserita, formatter);
+
+		// creazione dell'evento
+		Evento evento = new Evento(titolo, data, postiTotali);
+
+		System.out.print("Quante prenotazioni vuoi effettuare? ");
+		int prenotazioni = s.nextInt();
+		s.nextLine();
+
+		for (int i = 0; i < prenotazioni; i++) {
+			evento.prenota();
 		}
-		this.postiTotali = postiTotali;
-	}
 
-	public String getTitolo() {
-		return titolo;
-	}
+		System.out.println("Posti prenotati: " + evento.getPostiPrenotati());
+		System.out.println("Posti disponibili: " + (evento.getPostiTotali() - evento.getPostiPrenotati()));
 
-	public void setTitolo(String titolo) {
-		this.titolo = titolo;
-	}
+		// gestione eventuali disdette
+		System.out.println("Vuoi effettuare delle disdette? (s/n)");
+		String risposta = s.nextLine();
+		if (risposta.equalsIgnoreCase("s")) {
+			System.out.println("Quante disdette vuoi effettuare?");
+			int disdette = s.nextInt();
 
-	public LocalDate getData() {
-		return data;
-	}
-
-	public void setData(LocalDate data) {
-		LocalDate now = LocalDate.now();
-		if (data.isBefore(now)) {
-			throw new IllegalArgumentException("Non puoi inserire una data già trascorsa!");
+			for (int i = 0; i < disdette; i++) {
+				evento.disdici();
+			}
 		}
-		this.data = data;
-	}
 
-	public int getPostiTotali() {
-		return postiTotali;
+		System.out.println("Posti prenotati: " + evento.getPostiPrenotati());
+		System.out.println("Posti disponibili: " + (evento.getPostiTotali() - evento.getPostiPrenotati()));
+		s.close();
 	}
-
-	public int getPostiPrenotati() {
-		return postiPrenotati;
-	}
-
-	public void prenota() {
-		LocalDate now = LocalDate.now();
-		if (data.isBefore(now)) {
-			throw new IllegalStateException("Non puoi prenotare un evento già passato!");
-		}
-		if (postiPrenotati >= postiTotali) {
-			throw new IllegalStateException("I posti a disposizione sono esauriti!");
-		}
-		postiPrenotati++;
-	}
-
-	public void disdici() {
-		LocalDate now = LocalDate.now();
-		if (data.isBefore(now)) {
-			throw new IllegalStateException("Non puoi disdire un evento già passato!");
-		}
-		if (postiPrenotati == 0) {
-			throw new IllegalStateException("Non puoi effettuare più disdette dei posti prenotati!");
-		}
-		postiPrenotati--;
-	}
-
-	@Override
-	public String toString() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy").withLocale(Locale.ITALY);
-		String formattedDate = data.format(formatter);
-		return formattedDate + " - " + titolo;
-	}
-
 }
