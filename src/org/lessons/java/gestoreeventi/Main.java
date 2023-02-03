@@ -53,6 +53,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -76,14 +78,39 @@ public class Main {
 			titolo = s.nextLine();
 		}
 
+		// richiesta numero di posti
 		System.out.print("Inserisci il numero totale di posti: ");
-		int postiTotali = s.nextInt();
-		s.nextLine();
+		int postiTotali = 0;
+		boolean numeroValido = false;
+		while (!numeroValido) {
+			try {
+				postiTotali = s.nextInt();
+				s.nextLine();
+				if (postiTotali <= 0) {
+					System.out.println("I posti totali devono essere positivi! Riprova: ");
+				} else {
+					numeroValido = true;
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Input non valido. Riprova: ");
+				s.nextLine();
+			}
+		}
 
+		// richiesta data dell'evento
 		System.out.print("Inserisci la data dell'evento (gg/mm/aaaa): ");
-		String dataInserita = s.nextLine();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		LocalDate data = LocalDate.parse(dataInserita, formatter);
+		boolean dataValida = false;
+		LocalDate data = null;
+		while (!dataValida) {
+			try {
+				String dataInserita = s.nextLine();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				data = LocalDate.parse(dataInserita, formatter);
+				dataValida = true;
+			} catch (DateTimeParseException e) {
+				System.out.println("Data non valida. Riprova, usa questo format -> (gg/mm/aaaa): ");
+			}
+		}
 
 		// creazione dell'evento
 		Evento evento;
