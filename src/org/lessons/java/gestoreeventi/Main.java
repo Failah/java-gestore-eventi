@@ -60,12 +60,21 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
 
+		// richiesta tipo di evento
 		System.out.println("Vuoi creare un evento 'Evento' o un evento 'Concerto'?");
-		System.out.print("Inserisci 'Evento' o 'Concerto': ");
-		String sceltaEvento = s.nextLine();
+		String sceltaEvento = "";
+		while (!sceltaEvento.equalsIgnoreCase("Evento") && !sceltaEvento.equalsIgnoreCase("Concerto")) {
+			System.out.print("Inserisci 'Evento' o 'Concerto': ");
+			sceltaEvento = s.nextLine();
+		}
 
+		// richiesta nome evento
 		System.out.print("Inserisci il nome dell'evento: ");
 		String titolo = s.nextLine();
+		while (titolo.length() == 0) {
+			System.out.println("Il nome non può essere vuoto! Inserisci il nome: ");
+			titolo = s.nextLine();
+		}
 
 		System.out.print("Inserisci il numero totale di posti: ");
 		int postiTotali = s.nextInt();
